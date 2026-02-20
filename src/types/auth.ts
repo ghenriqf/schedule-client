@@ -7,7 +7,7 @@ export interface LoginResponse {
   token: string;
 }
 
-export interface User {
+export interface UserRequest {
   username: string;
   name: string;
   email: string;
