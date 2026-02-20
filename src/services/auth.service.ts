@@ -1,9 +1,14 @@
-import api from "./api";
-import type { Login, LoginResponse, UserResponse, User } from "../types/auth";
+import axio from "./api";
+import type {
+  LoginRequest,
+  LoginResponse,
+  UserResponse,
+  User,
+} from "../types/auth";
 
 export const authService = {
-  login: async (data: Login): Promise<LoginResponse> => {
-    const response = await api.post<LoginResponse>("/auth/login", data);
+  login: async (data: LoginRequest): Promise<LoginResponse> => {
+    const response = await axio.post<LoginResponse>("/auth/login", data);
 
     if (response.data.token) {
       localStorage.setItem("@App:token", response.data.token);
@@ -13,7 +18,7 @@ export const authService = {
   },
 
   signUp: async (data: User): Promise<UserResponse> => {
-    const response = await api.post<UserResponse>("/auth/signup", data);
+    const response = await axio.post<UserResponse>("/auth/signup", data);
     return response.data;
   },
 };
