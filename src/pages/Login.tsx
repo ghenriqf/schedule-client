@@ -1,21 +1,43 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
 import type { LoginRequest } from "../types/auth";
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "../services/auth.service";
+import { Bounce, toast } from "react-toastify";
+import type { AxiosError } from "axios";
+
+const TOAST_OPTS = {
+  position: "top-center" as const,
+  autoClose: 5000,
+  theme: "light" as const,
+  transition: Bounce,
+};
 
 function Login() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
     mutationFn: (credentials: LoginRequest) => authService.login(credentials),
-    onSuccess: (data) => {
-      console.log("Login successful:", data);
-      alert("Login successful!");
+    onSuccess: () => {
+      toast.success("Login realizado com sucesso!", TOAST_OPTS);
+      navigate("/ministries", { replace: true });
     },
-    onError: (error) => {
-      console.error("Login failed:", error);
-      alert("Login failed. Please check your credentials and try again.");
+    onError: (error: AxiosError<Record<string, string>>) => {
+      if (!error.response) {
+        toast.error("Servidor offline");
+        return;
+      }
+
+      const data = error.response.data;
+
+      const firstErrorMessage = Object.values(data)[0];
+
+      toast.error(
+        (firstErrorMessage as string) || "Erro ao fazer login",
+        TOAST_OPTS,
+      );
     },
   });
 
@@ -79,14 +101,14 @@ function Login() {
           </button>
         </form>
 
-        <div className="mt-6 text-center text-sm flex justify-center">
-          <p className="pl-3">Não tem uma conta?</p>
-          <a
-            href="#"
-            className="text-blue-500 hover:text-blue-700 font-medium pl-1"
+        <div className="mt-6 text-center text-sm flex justify-center gap-1">
+          <span className="text-gray-600">Não tem uma conta?</span>
+          <Link
+            to="/signup"
+            className="text-blue-500 hover:text-blue-700 font-medium"
           >
             Cadastre-se
-          </a>
+          </Link>
         </div>
       </div>
     </div>
