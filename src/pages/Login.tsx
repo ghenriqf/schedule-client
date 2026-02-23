@@ -26,7 +26,7 @@ function Login() {
     },
     onError: (error: AxiosError<Record<string, string>>) => {
       if (!error.response) {
-        toast.error("Servidor offline");
+        toast.error("Servidor offline", TOAST_OPTS);
         return;
       }
 
@@ -94,7 +94,7 @@ function Login() {
             className={`w-full text-white font-medium py-2.5 rounded-lg transition-colors ${
               loginMutation.isPending
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-700"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {loginMutation.isPending ? "Entrando..." : "Login"}
@@ -105,7 +105,7 @@ function Login() {
           <span className="text-gray-600">Não tem uma conta?</span>
           <Link
             to="/signup"
-            className="text-blue-500 hover:text-blue-700 font-medium"
+            className="text-indigo-600 hover:text-indigo-700 font-medium"
           >
             Cadastre-se
           </Link>
