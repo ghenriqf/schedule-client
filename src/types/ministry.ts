@@ -1,9 +1,15 @@
-export type MinistryRole = "admin" | "member";
+export type MinistryRole = "ADMIN" | "MEMBER";
+
+export interface MinistryRequest {
+  name: string;
+  description: string;
+}
 
 export interface MinistryResponse {
   id: number;
   name: string;
   description: string;
+  avatarUrl?: string | null;
 }
 
 export interface MinistryStats {
@@ -12,10 +18,15 @@ export interface MinistryStats {
   repertoryCount: number;
 }
 
-export interface MinistryDetailResponse {
-  id: number;
-  name: string;
-  description: string;
+export interface MinistryDetailResponse extends MinistryResponse {
   ministryStats: MinistryStats;
   role: MinistryRole;
+  members?: MinistryMember[];
+}
+
+export interface MinistryMember {
+  id: number;
+  name: string;
+  role?: MinistryRole | string;
+  avatarUrl?: string | null;
 }
