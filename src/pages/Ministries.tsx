@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { ministriesService } from "../services/ministries.service";
 import { MinistryCard } from "../components/MinistryCard";
 
-export function MinistriesPage() {
+export function Ministries() {
   const {
     data: ministries,
     isLoading,

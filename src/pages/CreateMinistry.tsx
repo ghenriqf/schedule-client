@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { ministriesService } from "../services/ministries.service";
 
-export function CreateMinistryPage() {
+export function CreateMinistry() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 

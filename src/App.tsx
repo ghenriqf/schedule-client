@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { MinistriesPage } from "./pages/MinistriesPage";
-import { CreateMinistryPage } from "./pages/CreateMinistryPage";
-import { MinistryDashboardPage } from "./pages/MinistryDashboardPage";
+import { Ministries } from "./pages/Ministries";
+import { CreateMinistry } from "./pages/CreateMinistry";
+import { MinistryDashboard } from "./pages/MinistryDashboard";
 import { AppLayout } from "./components/AppLayout";
 
 function App() {
@@ -13,9 +13,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route element={<AppLayout />}>
-          <Route path="/ministries" element={<MinistriesPage />} />
-          <Route path="/ministries/create" element={<CreateMinistryPage />} />
-          <Route path="/ministries/:id" element={<MinistryDashboardPage />} />
+          <Route path="/ministries" element={<Ministries />} />
+          <Route path="/ministries/create" element={<CreateMinistry />} />
+          <Route path="/ministries/:id" element={<MinistryDashboard />} />
           <Route
             path="/profile"
             element={

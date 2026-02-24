@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { ministriesService } from "../services/ministries.service";
 
-export function MinistryDashboardPage() {
+export function MinistryDashboard() {
   const { id } = useParams();
 
   const ministryId = useMemo(() => {
