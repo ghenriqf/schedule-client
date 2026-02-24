@@ -50,7 +50,7 @@ export function MinistriesPage() {
           </div>
 
           <Link
-            to="/ministries/new"
+            to="/ministries/create"
             className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
           >
             Criar ministério

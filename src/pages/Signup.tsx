@@ -24,7 +24,10 @@ function Signup() {
   const signupMutation = useMutation({
     mutationFn: (credentials: UserRequest) => authService.signUp(credentials),
     onSuccess: () => {
-      toast.success("Conta criada com sucesso! Faça login para continuar.", TOAST_OPTS);
+      toast.success(
+        "Conta criada com sucesso! Faça login para continuar.",
+        TOAST_OPTS,
+      );
       navigate("/login", { replace: true });
     },
     onError: (error: AxiosError<Record<string, string>>) => {
@@ -38,7 +41,10 @@ function Signup() {
       // pega a primeira mensagem de erro do objeto
       const firstErrorMessage = Object.values(data)[0];
 
-      toast.error((firstErrorMessage as string) || "Erro ao criar conta", TOAST_OPTS);
+      toast.error(
+        (firstErrorMessage as string) || "Erro ao criar conta",
+        TOAST_OPTS,
+      );
     },
   });
 
@@ -148,7 +154,7 @@ function Signup() {
             className={`w-full text-white font-medium py-2.5 rounded-lg transition-colors ${
               signupMutation.isPending
                 ? "bg-gray-400 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-700"
+                : "bg-indigo-600 hover:bg-indigo-700"
             }`}
           >
             {signupMutation.isPending ? "Cadastrando..." : "Cadastrar"}
@@ -157,7 +163,10 @@ function Signup() {
 
         <div className="mt-6 text-center text-sm flex justify-center gap-1">
           <span className="text-gray-600">Já tem uma conta?</span>
-          <Link to="/login" className="text-blue-500 hover:text-blue-700 font-medium">
+          <Link
+            to="/login"
+            className="text-indigo-600 hover:text-indigo-700 font-medium"
+          >
             Entrar
           </Link>
         </div>
