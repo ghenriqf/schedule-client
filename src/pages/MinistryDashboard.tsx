@@ -113,12 +113,12 @@ export function MinistryDashboard() {
                     Aqui vão aparecer as escalas do ministério.
                   </p>
                 </div>
-                <button
-                  type="button"
+                <Link
+                  to={`/ministries/${ministryId}/scales/create`}
                   className="inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-xs font-medium text-white shadow-sm hover:bg-indigo-700 transition-colors"
                 >
                   Criar nova escala
-                </button>
+                </Link>
               </div>
 
               <div className="p-4 sm:p-6">

@@ -49,12 +49,20 @@ export function Ministries() {
             )}
           </div>
 
-          <Link
-            to="/ministries/create"
-            className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
-          >
-            Criar ministério
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/ministries/create"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Criar ministério
+            </Link>
+            <Link
+              to="/ministries/join"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 transition-colors"
+            >
+              Entar em um ministério
+            </Link>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
