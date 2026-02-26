@@ -5,6 +5,8 @@ import { Ministries } from "./pages/Ministries";
 import { CreateMinistry } from "./pages/CreateMinistry";
 import { MinistryDashboard } from "./pages/MinistryDashboard";
 import { AppLayout } from "./components/AppLayout";
+import { CreateScale } from "./pages/CreateScale";
+import { JoinMinistry } from "./pages/JoinMinistry";
 
 function App() {
   return (
@@ -17,11 +19,16 @@ function App() {
           <Route path="/ministries/create" element={<CreateMinistry />} />
           <Route path="/ministries/:id" element={<MinistryDashboard />} />
           <Route
+            path="/ministries/:id/scales/create"
+            element={<CreateScale />}
+          />
+          <Route
             path="/profile"
             element={
               <div className="p-8 text-slate-500">Perfil (em breve)</div>
             }
           />
+          <Route path="/ministries/join" element={<JoinMinistry />} />
         </Route>
         <Route path="/" element={<Navigate to="/ministries" replace />} />
       </Routes>
