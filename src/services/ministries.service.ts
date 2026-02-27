@@ -41,4 +41,15 @@ export const ministriesService = {
     );
     return data;
   },
+
+  generateInviteCode: async (id: number): Promise<string> => {
+    const { data } = await axio.post<string>(
+      `${MINISTRIES_PATH}/${id}/invite-code`,
+    );
+    return data;
+  },
+
+  join: async (inviteCode: string): Promise<void> => {
+    await axio.post(`${MINISTRIES_PATH}/join/${inviteCode}`);
+  },
 };

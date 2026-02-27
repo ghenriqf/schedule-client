@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { membersService } from "../services/members.service";
+import { ministriesService } from "../services/ministries.service";
 
 export function JoinMinistry() {
   const navigate = useNavigate();
@@ -11,7 +11,7 @@ export function JoinMinistry() {
   const [inviteCode, setInviteCode] = useState("");
 
   const joinMutation = useMutation({
-    mutationFn: () => membersService.join(inviteCode.trim()),
+    mutationFn: () => ministriesService.join(inviteCode.trim()),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["ministries"] });
 

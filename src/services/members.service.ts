@@ -11,8 +11,4 @@ export const membersService = {
 
     return data;
   },
-
-  join: async (inviteCode: string): Promise<void> => {
-    await axio.post(`${MINISTRIES_PATH}/join/${inviteCode}`);
-  },
 };
