@@ -21,6 +21,7 @@ export interface MinistryStats {
 export interface MinistryDetailResponse extends MinistryResponse {
   ministryStats: MinistryStats;
   role: MinistryRole;
+  inviteCode?: string | null;
   members?: MinistryMember[];
 }
 
