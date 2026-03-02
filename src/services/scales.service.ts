@@ -15,4 +15,11 @@ export const scalesService = {
 
     return data;
   },
+
+  listByMinistry: async (ministryId: number): Promise<ScaleResponse[]> => {
+    const { data } = await axio.get<ScaleResponse[]>(
+      `${MINISTRIES_PATH}/${ministryId}/scales`,
+    );
+    return data;
+  },
 };

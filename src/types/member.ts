@@ -1,3 +1,5 @@
+import type { UserResponse } from "./auth";
+
 export interface MemberResponse {
   id: number;
   userId: number;
@@ -7,4 +9,5 @@ export interface MemberResponse {
     name: string;
   }[];
   role: "ADMIN" | "MEMBER";
+  user: UserResponse;
 }
