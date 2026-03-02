@@ -140,9 +140,6 @@ export function CreateScale() {
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
-                <p className="text-xs text-slate-400">
-                  A data deve ser futura.
-                </p>
               </div>
 
               {/* Ministro Responsável */}
@@ -170,17 +167,12 @@ export function CreateScale() {
                   {hasMembers &&
                     members!.map((member) => (
                       <option key={member.id} value={member.id}>
-                        Membro #{member.id} ({member.role})
+                        {/* CORREÇÃO AQUI: usamos .username conforme o seu JSON */}
+                        {member.user?.username || `Membro #${member.id}`} (
+                        {member.role})
                       </option>
                     ))}
                 </select>
-
-                {!membersLoading && !hasMembers && (
-                  <p className="text-xs text-red-500">
-                    Você precisa adicionar membros ao ministério antes de criar
-                    uma escala.
-                  </p>
-                )}
               </div>
             </section>
 
