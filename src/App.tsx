@@ -3,10 +3,11 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Ministries } from "./pages/Ministries";
 import { CreateMinistry } from "./pages/CreateMinistry";
-import { MinistryDashboard } from "./pages/MinistryDashboard";
+import { MinistryDashboard } from "./pages/MinistryDashboard/MinistryDashboard";
 import { AppLayout } from "./components/AppLayout";
 import { CreateScale } from "./pages/CreateScale";
 import { JoinMinistry } from "./pages/JoinMinistry";
+import { ScaleDetails } from "./pages/ScaleDetails";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+
         <Route element={<AppLayout />}>
           <Route path="/ministries" element={<Ministries />} />
           <Route path="/ministries/create" element={<CreateMinistry />} />
@@ -23,13 +25,18 @@ function App() {
             element={<CreateScale />}
           />
           <Route
+            path="/ministries/:ministryId/scales/:scaleId"
+            element={<ScaleDetails />}
+          />
+          <Route path="/ministries/join" element={<JoinMinistry />} />
+          <Route
             path="/profile"
             element={
               <div className="p-8 text-slate-500">Perfil (em breve)</div>
             }
           />
-          <Route path="/ministries/join" element={<JoinMinistry />} />
         </Route>
+
         <Route path="/" element={<Navigate to="/ministries" replace />} />
       </Routes>
     </BrowserRouter>

@@ -1,6 +1,6 @@
 import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { Navbar } from "./Navbar";
-import { AUTH_TOKEN_KEY } from "../services/auth.service";
+import { AUTH_TOKEN_KEY } from "../services/api";
 
 export function AppLayout() {
   const location = useLocation();

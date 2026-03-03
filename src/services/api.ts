@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const AUTH_TOKEN_KEY = "@App:token";
+export const AUTH_TOKEN_KEY = "@App:token";
 
-const axio = axios.create({
+const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-axio.interceptors.request.use((config) => {
+api.interceptors.request.use((config) => {
   const token = localStorage.getItem(AUTH_TOKEN_KEY);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
@@ -14,4 +14,20 @@ axio.interceptors.request.use((config) => {
   return config;
 });
 
-export default axio;
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem(AUTH_TOKEN_KEY);
+      window.location.href = "/login";
+    }
+
+    if (!error.response) {
+      console.error("Servidor indisponível");
+    }
+
+    return Promise.reject(error);
+  },
+);
+
+export default api;
