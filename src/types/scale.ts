@@ -1,3 +1,6 @@
+import type { MemberResponse } from "./member";
+import type { MusicResponse } from "./music";
+
 export interface ScaleRequest {
   name: string;
   description?: string;
@@ -11,4 +14,14 @@ export interface ScaleResponse {
   description?: string;
   date: string;
   ministerId: number;
+}
+
+export interface ScaleDetailsResponse {
+  id: number;
+  ministerId: number;
+  name: string;
+  description?: string;
+  date: string;
+  members: MemberResponse[];
+  musics: MusicResponse[];
 }
