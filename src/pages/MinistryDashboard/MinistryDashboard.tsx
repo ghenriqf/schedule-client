@@ -3,7 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import { ministriesService } from "../../services/ministries.service";
 import { scalesService } from "../../services/scales.service";
+import { membersService } from "../../services/members.service";
 import { ScaleCard } from "../../components/ScaleCard";
+import { MemberCard } from "../../components/MemberCard";
 import { Stat } from "./Stat";
 import { DashboardSkeleton } from "./DashboardSkeleton";
 import { InviteCodeSection } from "./InviteCodeSection";
@@ -30,6 +32,12 @@ export function MinistryDashboard() {
   const { data: scales, isLoading: scalesLoading } = useQuery({
     queryKey: ["scales", ministryId],
     queryFn: () => scalesService.listByMinistry(ministryId!),
+    enabled: ministryId !== null,
+  });
+
+  const { data: members, isLoading: membersLoading } = useQuery({
+    queryKey: ["members", ministryId],
+    queryFn: () => membersService.listByMinistry(ministryId!),
     enabled: ministryId !== null,
   });
 
@@ -175,7 +183,7 @@ export function MinistryDashboard() {
                   <ScaleCard
                     key={scale.id}
                     name={scale.name}
-                    description={scale.description}
+                    description={scale.description || "Escala sem descrição"}
                     date={scale.date}
                   />
                 ))}
@@ -183,36 +191,33 @@ export function MinistryDashboard() {
             )}
           </main>
 
-          {/* Members */}
           <aside className="bg-white rounded-xl border border-slate-200 shadow-sm">
             <div className="px-5 py-4 border-b border-slate-200">
               <h2 className="text-sm font-semibold text-slate-800">Membros</h2>
             </div>
 
-            <div className="p-4 space-y-3 max-h-[500px] overflow-y-auto">
-              {ministry.members?.length ? (
-                ministry.members.map((m) => (
+            <div className="p-4 space-y-4 max-h-125 overflow-y-auto">
+              {membersLoading ? (
+                [...Array(4)].map((_, i) => (
                   <div
-                    key={m.id}
-                    className="flex items-center gap-3 p-3 rounded-lg border border-slate-100 bg-slate-50 hover:bg-slate-100 transition"
-                  >
-                    <div className="h-9 w-9 rounded-full bg-indigo-100 flex items-center justify-center text-xs font-bold text-indigo-700">
-                      {m.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-slate-800">
-                        {m.name}
-                      </p>
-                      <p className="text-[10px] uppercase font-bold text-slate-400">
-                        {m.role}
-                      </p>
-                    </div>
-                  </div>
+                    key={i}
+                    className="h-16 rounded-lg bg-slate-100 animate-pulse"
+                  />
                 ))
-              ) : (
+              ) : !members || members.length === 0 ? (
                 <p className="text-xs text-slate-500 text-center">
                   Nenhum membro encontrado.
                 </p>
+              ) : (
+                members.map((member) => (
+                  <MemberCard
+                    key={member.id}
+                    username={member.user.username}
+                    email={member.user.email}
+                    role={member.role}
+                    functions={member.functions}
+                  />
+                ))
               )}
             </div>
           </aside>
