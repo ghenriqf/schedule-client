@@ -1,5 +1,9 @@
 import axio from "./api";
-import type { ScaleRequest, ScaleResponse } from "../types/scale";
+import type {
+  ScaleDetailsResponse,
+  ScaleRequest,
+  ScaleResponse,
+} from "../types/scale";
 
 const MINISTRIES_PATH = "ministries";
 
@@ -19,6 +23,16 @@ export const scalesService = {
   listByMinistry: async (ministryId: number): Promise<ScaleResponse[]> => {
     const { data } = await axio.get<ScaleResponse[]>(
       `${MINISTRIES_PATH}/${ministryId}/scales`,
+    );
+    return data;
+  },
+
+  findById: async (
+    ministryId: number,
+    scaleId: number,
+  ): Promise<ScaleDetailsResponse> => {
+    const { data } = await axio.get<ScaleDetailsResponse>(
+      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}`,
     );
     return data;
   },

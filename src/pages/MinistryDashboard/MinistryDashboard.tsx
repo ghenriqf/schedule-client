@@ -181,6 +181,8 @@ export function MinistryDashboard() {
               <div className="p-6 space-y-4">
                 {scales.map((scale) => (
                   <ScaleCard
+                    ministryId={ministryId}
+                    id={scale.id}
                     key={scale.id}
                     name={scale.name}
                     description={scale.description || "Escala sem descrição"}

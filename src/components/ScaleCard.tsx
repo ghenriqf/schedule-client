@@ -1,13 +1,22 @@
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Link } from "react-router-dom";
 
 interface ScaleCardProps {
+  id: number;
+  ministryId: number;
   name: string;
   description: string;
   date: string;
 }
 
-export function ScaleCard({ name, description, date }: ScaleCardProps) {
+export function ScaleCard({
+  id,
+  ministryId,
+  name,
+  description,
+  date,
+}: ScaleCardProps) {
   const formattedDate = format(new Date(date), "dd 'de' MMM, HH:mm", {
     locale: ptBR,
   });
@@ -29,9 +38,12 @@ export function ScaleCard({ name, description, date }: ScaleCardProps) {
       </p>
 
       <div className="mt-4 pt-3 border-t border-slate-100">
-        <button className="w-full py-2 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition-colors">
+        <Link
+          to={`/ministries/${ministryId}/scales/${id}`}
+          className="block w-full text-center py-2 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition-colors"
+        >
           Ver detalhes
-        </button>
+        </Link>
       </div>
     </div>
   );
