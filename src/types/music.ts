@@ -7,3 +7,11 @@ export interface MusicResponse {
   videoLink?: string;
   chordSheetLink?: string;
 }
+
+export interface MusicRequest {
+  title: string;
+  artist: string;
+  tone: string;
+  videoLink?: string;
+  chordSheetLink?: string;
+}
