@@ -24,6 +24,7 @@ export const scalesService = {
     const { data } = await axio.get<ScaleResponse[]>(
       `${MINISTRIES_PATH}/${ministryId}/scales`,
     );
+
     return data;
   },
 
@@ -34,6 +35,57 @@ export const scalesService = {
     const { data } = await axio.get<ScaleDetailsResponse>(
       `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}`,
     );
+
+    return data;
+  },
+
+  addMusic: async (
+    ministryId: number,
+    scaleId: number,
+    musicId: number,
+  ): Promise<ScaleDetailsResponse> => {
+    const { data } = await axio.post<ScaleDetailsResponse>(
+      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/musics/${musicId}`,
+    );
+
+    return data;
+  },
+
+  removeMusic: async (
+    ministryId: number,
+    scaleId: number,
+    musicId: number,
+  ): Promise<ScaleDetailsResponse> => {
+    const { data } = await axio.delete<ScaleDetailsResponse>(
+      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/musics/${musicId}`,
+    );
+
+    return data;
+  },
+
+  addMember: async (
+    ministryId: number,
+    scaleId: number,
+    memberId: number,
+    request: { functionIds: number[] },
+  ): Promise<ScaleDetailsResponse> => {
+    const { data } = await axio.post<ScaleDetailsResponse>(
+      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/members/${memberId}`,
+      request,
+    );
+
+    return data;
+  },
+
+  removeMember: async (
+    ministryId: number,
+    scaleId: number,
+    memberId: number,
+  ): Promise<ScaleDetailsResponse> => {
+    const { data } = await axio.delete<ScaleDetailsResponse>(
+      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/members/${memberId}`,
+    );
+
     return data;
   },
 };
