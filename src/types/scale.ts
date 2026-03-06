@@ -16,12 +16,19 @@ export interface ScaleResponse {
   ministerId: number;
 }
 
+export interface ScaleMemberResponse {
+  id: number;
+  memberId: number;
+  memberName: string;
+  functions: string[];
+}
+
 export interface ScaleDetailsResponse {
   id: number;
-  ministerId: number;
+  ministryId: number;
   name: string;
   description?: string;
   date: string;
-  members: MemberResponse[];
+  members: ScaleMemberResponse[];
   musics: MusicResponse[];
 }

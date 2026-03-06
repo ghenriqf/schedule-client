@@ -10,9 +10,7 @@ import { AddMusicModal } from "../components/modals/AddMusicModal";
 import { AddMemberModal } from "../components/modals/AddMemberModal";
 
 import type { MusicResponse } from "../types/music";
-import type { MemberResponse } from "../types/member";
-
-// ─── Icons ────────────────────────────────────────────────────────────────────
+import type { ScaleMemberResponse } from "../types/scale";
 
 const IconArrowLeft = () => (
   <svg
@@ -106,8 +104,6 @@ function ScaleDetailsSkeleton() {
   );
 }
 
-// ─── Empty State ──────────────────────────────────────────────────────────────
-
 function EmptyState({ icon, message }: { icon: string; message: string }) {
   return (
     <div className="flex flex-col items-center gap-2 py-10 text-center">
@@ -117,41 +113,30 @@ function EmptyState({ icon, message }: { icon: string; message: string }) {
   );
 }
 
-// ─── Member row ───────────────────────────────────────────────────────────────
-
 interface MemberRowProps {
-  member: MemberResponse;
+  member: ScaleMemberResponse;
   isAdmin: boolean;
   isRemoving: boolean;
   onRemove: (id: number) => void;
 }
 
 function MemberRow({ member, isAdmin, isRemoving, onRemove }: MemberRowProps) {
-  const name = member.user.username;
-  const isAdminRole = member.role === "ADMIN";
-
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-        {initials(name)}
+        {initials(member.memberName)}
       </div>
-
       <div className="min-w-0 flex-1">
-        <p className="text-sm font-semibold text-slate-800 truncate">{name}</p>
+        <p className="text-sm font-semibold text-slate-800 truncate">
+          {member.memberName}
+        </p>
         <p className="text-[11px] text-slate-400 truncate">
-          {member.functions?.map((f) => f.name).join(", ") || member.user.email}
+          {member.functions?.join(", ") || "Sem funções atribuídas"}
         </p>
       </div>
-
-      {isAdminRole && (
-        <span className="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-600 border border-violet-200">
-          Admin
-        </span>
-      )}
-
       {isAdmin && (
         <button
-          onClick={() => onRemove(member.id)}
+          onClick={() => onRemove(member.memberId)}
           disabled={isRemoving}
           className="shrink-0 opacity-0 group-hover:opacity-100 flex items-center gap-1 text-[11px] text-red-400 hover:text-red-600 disabled:opacity-40 transition-all"
         >
@@ -161,8 +146,6 @@ function MemberRow({ member, isAdmin, isRemoving, onRemove }: MemberRowProps) {
     </div>
   );
 }
-
-// ─── Music row ────────────────────────────────────────────────────────────────
 
 interface MusicRowProps {
   music: MusicResponse;
@@ -228,8 +211,6 @@ function MusicRow({ music, isAdmin, isRemoving, onRemove }: MusicRowProps) {
   );
 }
 
-// ─── Stat ─────────────────────────────────────────────────────────────────────
-
 function Stat({
   icon,
   label,
@@ -251,8 +232,6 @@ function Stat({
     </div>
   );
 }
-
-// ─── Main ─────────────────────────────────────────────────────────────────────
 
 export function ScaleDetails() {
   const { ministryId, scaleId } = useParams();
@@ -448,24 +427,15 @@ export function ScaleDetails() {
                   </div>
 
                   <div className="p-3">
-                    {scale.members.length === 0 ? (
-                      <EmptyState
-                        icon="👥"
-                        message="Nenhum membro vinculado à escala."
+                    {scale.members.map((member: ScaleMemberResponse) => (
+                      <MemberRow
+                        key={member.id}
+                        member={member}
+                        isAdmin={isAdmin}
+                        isRemoving={removeMemberMutation.isPending}
+                        onRemove={(id) => removeMemberMutation.mutate(id)}
                       />
-                    ) : (
-                      <div className="space-y-1">
-                        {scale.members.map((member: MemberResponse) => (
-                          <MemberRow
-                            key={member.id}
-                            member={member}
-                            isAdmin={isAdmin}
-                            isRemoving={removeMemberMutation.isPending}
-                            onRemove={(id) => removeMemberMutation.mutate(id)}
-                          />
-                        ))}
-                      </div>
-                    )}
+                    ))}
                   </div>
                 </div>
 

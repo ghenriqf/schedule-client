@@ -3,8 +3,6 @@ import { useState } from "react";
 import { musicService } from "../../services/musics.service";
 import { ModalShell, IconCheck, IconSpinner, IconSearch } from "./ModalShell";
 import type { MusicResponse } from "../../types/music";
-import type { PaginatedResponse } from "../../types/page";
-
 
 interface AddMusicModalProps {
   ministryId: number;
@@ -21,18 +19,25 @@ export function AddMusicModal({
 }: AddMusicModalProps) {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
   const [selectedMusic, setSelectedMusic] = useState<number | null>(null);
 
-  const { data, isLoading, isError } = useQuery<
-    PaginatedResponse<MusicResponse>,
-    Error
-  >({
-    queryKey: ["musics", ministryId, page, search],
-    queryFn: () =>
-      musicService.listByMinistry(ministryId, { page, size: 8, search }),
+  const {
+    data: musicList = [],
+    isLoading,
+    isError,
+  } = useQuery<MusicResponse[]>({
+    queryKey: ["musics", ministryId, search],
+    queryFn: () => musicService.listByMinistry(ministryId, { search }),
     enabled: open,
   });
+
+  const filteredList = search.trim()
+    ? musicList.filter(
+        (m) =>
+          m.title.toLowerCase().includes(search.toLowerCase()) ||
+          m.artist.toLowerCase().includes(search.toLowerCase()),
+      )
+    : musicList;
 
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
@@ -47,9 +52,6 @@ export function AddMusicModal({
   });
 
   if (!open) return null;
-
-  const musicList = data?.content ?? [];
-  const totalPages = data?.totalPages ?? 1;
 
   return (
     <ModalShell
@@ -93,10 +95,7 @@ export function AddMusicModal({
               type="text"
               placeholder="Buscar por título ou artista…"
               value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(0);
-              }}
+              onChange={(e) => setSearch(e.target.value)}
               autoFocus
               className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 focus:bg-white transition"
             />
@@ -115,7 +114,7 @@ export function AddMusicModal({
             <div className="flex items-center justify-center h-48 text-sm text-slate-400">
               Erro ao carregar músicas.
             </div>
-          ) : musicList.length === 0 ? (
+          ) : filteredList.length === 0 ? (
             <div className="flex flex-col items-center justify-center gap-2 h-48 text-center">
               <span className="text-3xl opacity-25">🎵</span>
               <p className="text-sm text-slate-400">
@@ -123,7 +122,7 @@ export function AddMusicModal({
               </p>
             </div>
           ) : (
-            musicList.map((music) => {
+            filteredList.map((music) => {
               const isSelected = selectedMusic === music.id;
               return (
                 <button
@@ -178,31 +177,6 @@ export function AddMusicModal({
             })
           )}
         </div>
-
-        {/* Pagination */}
-        {totalPages > 1 && (
-          <div className="px-5 py-3 border-t border-slate-100 flex items-center justify-between">
-            <button
-              onClick={() => setPage((p) => Math.max(p - 1, 0))}
-              disabled={page === 0 || isLoading}
-              className="px-4 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
-            >
-              ← Anterior
-            </button>
-            <span className="text-xs text-slate-400">
-              Página{" "}
-              <span className="font-semibold text-slate-600">{page + 1}</span>{" "}
-              de {totalPages}
-            </span>
-            <button
-              onClick={() => setPage((p) => p + 1)}
-              disabled={page + 1 >= totalPages || isLoading}
-              className="px-4 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
-            >
-              Próxima →
-            </button>
-          </div>
-        )}
       </div>
     </ModalShell>
   );

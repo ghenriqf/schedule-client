@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import { musicService } from "../services/musics.service";
 import { ministriesService } from "../services/ministries.service";
 import type { MusicResponse, MusicRequest } from "../types/music";
-import type { PaginatedResponse } from "../types/page";
 
 const IconArrowLeft = () => (
   <svg
@@ -201,6 +200,8 @@ const EMPTY_FORM: MusicRequest = {
   chordSheetLink: "",
 };
 
+// ─── MusicFormModal ───────────────────────────────────────────────────────────
+
 interface MusicFormModalProps {
   open: boolean;
   onClose: () => void;
@@ -228,21 +229,6 @@ function MusicFormModal({
       : EMPTY_FORM,
   );
 
-  // Sync when initial changes (edit mode)
-  useState(() => {
-    if (initial) {
-      setForm({
-        title: initial.title,
-        artist: initial.artist,
-        tone: initial.tone,
-        videoLink: initial.videoLink ?? "",
-        chordSheetLink: initial.chordSheetLink ?? "",
-      });
-    } else {
-      setForm(EMPTY_FORM);
-    }
-  });
-
   if (!open) return null;
 
   const canSubmit =
@@ -266,7 +252,6 @@ function MusicFormModal({
   return (
     <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg flex flex-col overflow-hidden">
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100">
           <div>
             <h2 className="text-sm font-bold text-slate-800">
@@ -286,7 +271,6 @@ function MusicFormModal({
           </button>
         </div>
 
-        {/* Body */}
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
@@ -305,7 +289,6 @@ function MusicFormModal({
                 className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:bg-white transition"
               />
             </div>
-
             <div className="space-y-1.5">
               <label className="block text-xs font-semibold text-slate-700">
                 Artista *
@@ -375,7 +358,6 @@ function MusicFormModal({
             />
           </div>
 
-          {/* Footer */}
           <div className="flex justify-end gap-3 pt-2 border-t border-slate-100">
             <button
               type="button"
@@ -407,7 +389,7 @@ function MusicFormModal({
   );
 }
 
-// ─── Delete Confirm Modal ─────────────────────────────────────────────────────
+// ─── DeleteConfirmModal ───────────────────────────────────────────────────────
 
 interface DeleteConfirmProps {
   music: MusicResponse | null;
@@ -459,7 +441,7 @@ function DeleteConfirmModal({
   );
 }
 
-// ─── Music Row ────────────────────────────────────────────────────────────────
+// ─── MusicRow ─────────────────────────────────────────────────────────────────
 
 interface MusicRowProps {
   music: MusicResponse;
@@ -474,18 +456,15 @@ function MusicRow({ music, isAdmin, onEdit, onDelete }: MusicRowProps) {
       <div className="w-9 h-9 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-400 shrink-0">
         🎵
       </div>
-
       <div className="min-w-0 flex-1">
         <p className="text-sm font-semibold text-slate-800 truncate">
           {music.title}
         </p>
         <p className="text-xs text-slate-400 truncate mt-0.5">{music.artist}</p>
       </div>
-
       <span className="shrink-0 text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200">
         {music.tone}
       </span>
-
       <div className="flex items-center gap-2 shrink-0">
         {music.videoLink && (
           <a
@@ -493,7 +472,6 @@ function MusicRow({ music, isAdmin, onEdit, onDelete }: MusicRowProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-[11px] text-violet-500 hover:text-violet-700 transition-colors"
-            title="Ver vídeo"
           >
             <IconLink /> Vídeo
           </a>
@@ -504,26 +482,22 @@ function MusicRow({ music, isAdmin, onEdit, onDelete }: MusicRowProps) {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-600 transition-colors"
-            title="Ver cifra"
           >
             <IconLink /> Cifra
           </a>
         )}
       </div>
-
       {isAdmin && (
         <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-all shrink-0">
           <button
             onClick={() => onEdit(music)}
             className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
-            title="Editar"
           >
             <IconEdit />
           </button>
           <button
             onClick={() => onDelete(music)}
             className="w-7 h-7 flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 hover:bg-red-50 transition-colors"
-            title="Remover"
           >
             <IconTrash />
           </button>
@@ -555,7 +529,6 @@ export function Repertorio() {
   const ministryId = Number(id);
 
   const [search, setSearch] = useState("");
-  const [page, setPage] = useState(0);
   const [formOpen, setFormOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<MusicResponse | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<MusicResponse | null>(null);
@@ -568,18 +541,23 @@ export function Repertorio() {
 
   const isAdmin = ministry?.role === "ADMIN";
 
-  const { data, isLoading, isError } = useQuery<
-    PaginatedResponse<MusicResponse>
-  >({
-    queryKey: ["musics", ministryId, page, search],
-    queryFn: () =>
-      musicService.listByMinistry(ministryId, { page, size: 10, search }),
+  const {
+    data: musicList = [],
+    isLoading,
+    isError,
+  } = useQuery<MusicResponse[]>({
+    queryKey: ["musics", ministryId, search],
+    queryFn: () => musicService.listByMinistry(ministryId, { search }),
     enabled: !!ministryId,
   });
 
-  const musicList = data?.content ?? [];
-  const totalPages = data?.totalPages ?? 1;
-  const totalElements = data?.totalElements ?? 0;
+  const filteredList = search.trim()
+    ? musicList.filter(
+        (m) =>
+          m.title.toLowerCase().includes(search.toLowerCase()) ||
+          m.artist.toLowerCase().includes(search.toLowerCase()),
+      )
+    : musicList;
 
   const createMutation = useMutation({
     mutationFn: (req: MusicRequest) => musicService.create(ministryId, req),
@@ -599,6 +577,7 @@ export function Repertorio() {
       queryClient.invalidateQueries({ queryKey: ["musics", ministryId] });
       toast.success("Música atualizada.");
       setEditTarget(null);
+      setFormOpen(false);
     },
     onError: () => toast.error("Não foi possível atualizar a música."),
   });
@@ -671,7 +650,6 @@ export function Repertorio() {
 
         {/* Content */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-7 space-y-5">
-          {/* Stats + search bar */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-3">
             <div className="relative flex-1">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
@@ -681,20 +659,16 @@ export function Repertorio() {
                 type="text"
                 placeholder="Buscar por título ou artista…"
                 value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(0);
-                }}
+                onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 transition"
               />
             </div>
             <p className="text-xs text-slate-400 shrink-0">
-              {totalElements} música{totalElements !== 1 ? "s" : ""} no
-              repertório
+              {filteredList.length} música{filteredList.length !== 1 ? "s" : ""}{" "}
+              no repertório
             </p>
           </div>
 
-          {/* Music list card */}
           <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
             {isLoading ? (
               <RepertorioSkeleton />
@@ -705,7 +679,7 @@ export function Repertorio() {
                   Erro ao carregar repertório.
                 </p>
               </div>
-            ) : musicList.length === 0 ? (
+            ) : filteredList.length === 0 ? (
               <div className="flex flex-col items-center gap-3 py-16 text-center">
                 <span className="text-4xl opacity-25">🎵</span>
                 <div>
@@ -740,7 +714,7 @@ export function Repertorio() {
               </div>
             ) : (
               <div className="divide-y divide-slate-50 p-2">
-                {musicList.map((music) => (
+                {filteredList.map((music) => (
                   <MusicRow
                     key={music.id}
                     music={music}
@@ -751,38 +725,10 @@ export function Repertorio() {
                 ))}
               </div>
             )}
-
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="px-4 py-3 border-t border-slate-100 flex items-center justify-between">
-                <button
-                  onClick={() => setPage((p) => Math.max(p - 1, 0))}
-                  disabled={page === 0 || isLoading}
-                  className="px-4 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
-                >
-                  ← Anterior
-                </button>
-                <span className="text-xs text-slate-400">
-                  Página{" "}
-                  <span className="font-semibold text-slate-600">
-                    {page + 1}
-                  </span>{" "}
-                  de {totalPages}
-                </span>
-                <button
-                  onClick={() => setPage((p) => p + 1)}
-                  disabled={page + 1 >= totalPages || isLoading}
-                  className="px-4 py-1.5 text-xs font-medium rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50 disabled:opacity-30 transition-colors"
-                >
-                  Próxima →
-                </button>
-              </div>
-            )}
           </div>
         </div>
       </div>
 
-      {/* Modals */}
       <MusicFormModal
         open={formOpen}
         onClose={closeForm}

@@ -39,27 +39,17 @@ export const scalesService = {
     return data;
   },
 
-  addMusic: async (
-    ministryId: number,
-    scaleId: number,
-    musicId: number,
-  ): Promise<ScaleDetailsResponse> => {
+  addMusic: async (ministryId: number, scaleId: number, musicId: number) => {
     const { data } = await axio.post<ScaleDetailsResponse>(
-      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/musics/${musicId}`,
+      `scales/${scaleId}/musics/${musicId}`,
     );
-
     return data;
   },
 
-  removeMusic: async (
-    ministryId: number,
-    scaleId: number,
-    musicId: number,
-  ): Promise<ScaleDetailsResponse> => {
+  removeMusic: async (ministryId: number, scaleId: number, musicId: number) => {
     const { data } = await axio.delete<ScaleDetailsResponse>(
-      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/musics/${musicId}`,
+      `scales/${scaleId}/musics/${musicId}`,
     );
-
     return data;
   },
 
@@ -68,12 +58,11 @@ export const scalesService = {
     scaleId: number,
     memberId: number,
     request: { functionIds: number[] },
-  ): Promise<ScaleDetailsResponse> => {
+  ) => {
     const { data } = await axio.post<ScaleDetailsResponse>(
-      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/members/${memberId}`,
+      `scales/${scaleId}/members/${memberId}`,
       request,
     );
-
     return data;
   },
 
@@ -81,11 +70,10 @@ export const scalesService = {
     ministryId: number,
     scaleId: number,
     memberId: number,
-  ): Promise<ScaleDetailsResponse> => {
+  ) => {
     const { data } = await axio.delete<ScaleDetailsResponse>(
-      `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/members/${memberId}`,
+      `scales/${scaleId}/members/${memberId}`,
     );
-
     return data;
   },
 };
