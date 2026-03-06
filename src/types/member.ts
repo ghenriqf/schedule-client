@@ -7,7 +7,7 @@ export interface MemberResponse {
   functions: {
     id: number;
     name: string;
-  }[];
+  }[] | null;
   role: "ADMIN" | "MEMBER";
   user: UserResponse;
 }
