@@ -1,6 +1,7 @@
 import axio from "./api";
 import type { MusicResponse } from "../types/music";
 import type { PaginatedResponse } from "../types/page";
+import type { MusicRequest } from "../types/music";
 
 const MINISTRIES_PATH = "ministries";
 
@@ -42,5 +43,32 @@ export const musicService = {
     await axio.delete(
       `${MINISTRIES_PATH}/${ministryId}/scales/${scaleId}/musics/${musicId}`,
     );
+  },
+
+  create: async (
+    ministryId: number,
+    data: MusicRequest,
+  ): Promise<MusicResponse> => {
+    const { data: res } = await axio.post<MusicResponse>(
+      `ministries/${ministryId}/musics`,
+      data,
+    );
+    return res;
+  },
+
+  update: async (
+    ministryId: number,
+    musicId: number,
+    data: MusicRequest,
+  ): Promise<MusicResponse> => {
+    const { data: res } = await axio.put<MusicResponse>(
+      `ministries/${ministryId}/musics/${musicId}`,
+      data,
+    );
+    return res;
+  },
+
+  delete: async (ministryId: number, musicId: number): Promise<void> => {
+    await axio.delete(`ministries/${ministryId}/musics/${musicId}`);
   },
 };
