@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
-import { musicService } from "../services/musics.service";
-import { ministriesService } from "../services/ministries.service";
-import type { MusicResponse, MusicRequest } from "../types/music";
+import { repertoireApi } from "@/features/repertoire/api/repertoireApi";
+import { ministryApi } from "@/features/ministry/api/ministryApi";
+import type { MusicResponse, MusicRequest } from "@/entities/music/model/types";
 
 const IconArrowLeft = () => (
   <svg
@@ -535,7 +535,7 @@ export function Repertorio() {
 
   const { data: ministry } = useQuery({
     queryKey: ["ministry", ministryId],
-    queryFn: () => ministriesService.findDetails(ministryId),
+    queryFn: () => ministryApi.findDetails(ministryId),
     enabled: !!ministryId,
   });
 
@@ -547,7 +547,7 @@ export function Repertorio() {
     isError,
   } = useQuery<MusicResponse[]>({
     queryKey: ["musics", ministryId, search],
-    queryFn: () => musicService.listByMinistry(ministryId, { search }),
+    queryFn: () => repertoireApi.listByMinistry(ministryId, { search }),
     enabled: !!ministryId,
   });
 
@@ -560,7 +560,7 @@ export function Repertorio() {
     : musicList;
 
   const createMutation = useMutation({
-    mutationFn: (req: MusicRequest) => musicService.create(ministryId, req),
+    mutationFn: (req: MusicRequest) => repertoireApi.create(ministryId, req),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["musics", ministryId] });
       queryClient.invalidateQueries({ queryKey: ["ministry", ministryId] });
@@ -572,7 +572,7 @@ export function Repertorio() {
 
   const updateMutation = useMutation({
     mutationFn: (req: MusicRequest) =>
-      musicService.update(ministryId, editTarget!.id, req),
+      repertoireApi.update(ministryId, editTarget!.id, req),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["musics", ministryId] });
       toast.success("Música atualizada.");
@@ -583,7 +583,7 @@ export function Repertorio() {
   });
 
   const deleteMutation = useMutation({
-    mutationFn: () => musicService.delete(ministryId, deleteTarget!.id),
+    mutationFn: () => repertoireApi.delete(ministryId, deleteTarget!.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["musics", ministryId] });
       queryClient.invalidateQueries({ queryKey: ["ministry", ministryId] });

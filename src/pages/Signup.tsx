@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import type { UserRequest } from "../types/auth";
-import { authService } from "../services/auth.service";
+import type { UserRequest } from "@/features/auth/model/types";
+import { authApi } from "@/features/auth/api/authApi";
 import { useMutation } from "@tanstack/react-query";
 import { Bounce, toast } from "react-toastify";
 import type { AxiosError } from "axios";
@@ -22,7 +22,7 @@ function Signup() {
   const [password, setPassword] = useState("");
 
   const signupMutation = useMutation({
-    mutationFn: (credentials: UserRequest) => authService.signUp(credentials),
+    mutationFn: (credentials: UserRequest) => authApi.signUp(credentials),
     onSuccess: () => {
       toast.success(
         "Conta criada com sucesso! Faça login para continuar.",

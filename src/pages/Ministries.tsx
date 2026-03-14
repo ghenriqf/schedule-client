@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
-import { ministriesService } from "../../services/ministries.service";
-import { MinistryCard } from "./components/MinistryCard";
-import type { MinistryDetailResponse } from "../../types/ministry";
+import { ministryApi } from '@/features/ministry'
+import { MinistryCard } from '@/features/ministry'
+import type { MinistryDetailResponse } from "@/entities/ministry/model/types";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -188,7 +188,7 @@ export function Ministries() {
     refetch,
   } = useQuery({
     queryKey: ["ministries"],
-    queryFn: () => ministriesService.list(),
+    queryFn: () => ministryApi.list(),
   });
 
   const filtered: MinistryDetailResponse[] = (ministries ?? []).filter((m) => {

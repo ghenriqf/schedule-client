@@ -2,10 +2,10 @@ import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
-import { scalesService } from "../services/scales.service";
-import { membersService } from "../services/members.service";
-import type { ScaleRequest } from "../types/scale";
-import type { MemberResponse } from "../types/member";
+import { scaleApi } from "@/features/scale/api/scaleApi";
+import { membersApi } from "@/features/ministry/api/membersApi";
+import type { ScaleRequest } from "@/entities/scale/model/types";
+import type { MemberResponse } from "@/entities/member/model/types";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -291,7 +291,7 @@ export function CreateScale() {
 
   const { data: members, isLoading: membersLoading } = useQuery({
     queryKey: ["members", ministryId],
-    queryFn: () => membersService.listByMinistry(ministryId!),
+    queryFn: () => membersApi.listByMinistry(ministryId!),
     enabled: ministryId !== null,
   });
 
@@ -308,7 +308,7 @@ export function CreateScale() {
         ministerId: Number(ministerId),
       };
 
-      return scalesService.create(ministryId, payload);
+      return scaleApi.create(ministryId, payload);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["scales", ministryId] });

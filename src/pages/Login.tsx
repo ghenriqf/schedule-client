@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import type { LoginRequest } from "../types/auth";
+import type { LoginRequest } from "@/features/auth/model/types";
 import { useMutation } from "@tanstack/react-query";
-import { authService } from "../services/auth.service";
+import { authApi } from "@/features/auth/api/authApi";
 import { Bounce, toast } from "react-toastify";
 import type { AxiosError } from "axios";
 
@@ -19,7 +19,7 @@ function Login() {
   const [password, setPassword] = useState("");
 
   const loginMutation = useMutation({
-    mutationFn: (credentials: LoginRequest) => authService.login(credentials),
+    mutationFn: (credentials: LoginRequest) => authApi.login(credentials),
     onSuccess: () => {
       toast.success("Login realizado com sucesso!", TOAST_OPTS);
       navigate("/ministries", { replace: true });

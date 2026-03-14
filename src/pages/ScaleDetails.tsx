@@ -4,13 +4,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-import { scalesService } from "../services/scales.service";
-import { ministriesService } from "../services/ministries.service";
-import { AddMusicModal } from "../components/modals/AddMusicModal";
-import { AddMemberModal } from "../components/modals/AddMemberModal";
+import { scaleApi } from "@/features/scale/api/scaleApi";
+import { ministryApi } from "@/features/ministry/api/ministryApi";
+import { AddMusicModal } from "@/features/repertoire/ui/AddMusicModal";
+import { AddMemberModal } from "@/features/ministry/ui/AddMemberModal";
 
-import type { MusicResponse } from "../types/music";
-import type { ScaleMemberResponse } from "../types/scale";
+import type { MusicResponse } from "@/entities/music/model/types";
+import type { ScaleMemberResponse } from "@/entities/scale/model/types";
 
 const IconArrowLeft = () => (
   <svg
@@ -250,35 +250,35 @@ export function ScaleDetails() {
     isError,
   } = useQuery({
     queryKey: ["scale-details", parsedScaleId],
-    queryFn: () => scalesService.findById(parsedMinistryId, parsedScaleId),
+    queryFn: () => scaleApi.findById(parsedMinistryId, parsedScaleId),
     enabled: !!parsedScaleId,
   });
 
   const { data: ministry } = useQuery({
     queryKey: ["ministry", parsedMinistryId],
-    queryFn: () => ministriesService.findDetails(parsedMinistryId),
+    queryFn: () => ministryApi.findDetails(parsedMinistryId),
     enabled: !!parsedMinistryId,
   });
 
   const isAdmin = ministry?.role === "ADMIN";
 
-  const removeMusicMutation = useMutation({
-    mutationFn: (musicId: number) =>
-      scalesService.removeMusic(parsedMinistryId, parsedScaleId, musicId),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["scale-details", parsedScaleId],
-      }),
-  });
+ const removeMusicMutation = useMutation({
+  mutationFn: (musicId: number) =>
+    scaleApi.removeMusic(parsedScaleId, musicId),
+  onSuccess: () =>
+    queryClient.invalidateQueries({
+      queryKey: ['scale-details', parsedScaleId],
+    }),
+})
 
-  const removeMemberMutation = useMutation({
-    mutationFn: (memberId: number) =>
-      scalesService.removeMember(parsedMinistryId, parsedScaleId, memberId),
-    onSuccess: () =>
-      queryClient.invalidateQueries({
-        queryKey: ["scale-details", parsedScaleId],
-      }),
-  });
+const removeMemberMutation = useMutation({
+  mutationFn: (memberId: number) =>
+    scaleApi.removeMember(parsedScaleId, memberId),
+  onSuccess: () =>
+    queryClient.invalidateQueries({
+      queryKey: ['scale-details', parsedScaleId],
+    }),
+})
 
   if (isLoading) return <ScaleDetailsSkeleton />;
 

@@ -2,20 +2,20 @@ import { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { ministriesService } from "../../services/ministries.service";
-import { scalesService } from "../../services/scales.service";
-import { membersService } from "../../services/members.service";
+import { ministryApi } from '@/features/ministry'
+import { scaleApi } from "@/features/scale/api/scaleApi";
+import { membersApi } from "@/features/ministry/api/membersApi";
 
-import type { MinistryDetailResponse } from "../../types/ministry";
-import type { MemberResponse } from "../../types/member";
-import type { ScaleResponse } from "../../types/scale";
+import type { MinistryDetailResponse } from "@/entities/ministry/model/types";
+import type { MemberResponse } from "@/entities/member/model/types";
+import type { ScaleResponse } from "@/entities/scale/model/types";
 
-import { Stat } from "./components/Stat";
-import { InviteCodeSection } from "./components/InviteCodeSection";
-import { ScaleCard } from "./components/ScaleCard";
-import { MemberCard } from "./components/MemberCard";
-import { EmptyState } from "./components/EmptyState";
-import { DashboardSkeleton } from "./components/DashboardSkeleton";
+import { Stat } from "../features/ministry/ui/Stat";
+import { InviteCodeSection } from "../features/ministry/ui/InviteCodeSection";
+import { ScaleCard } from "../features/ministry/ui/ScaleCard";
+import { MemberCard } from "../features/ministry/ui/MemberCard";
+import { EmptyState } from "../features/ministry/ui/EmptyState";
+import { DashboardSkeleton } from "../features/ministry/ui/DashboardSkeleton";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -140,19 +140,19 @@ export function MinistryDashboard() {
     refetch,
   } = useQuery<MinistryDetailResponse>({
     queryKey: ["ministry", ministryId],
-    queryFn: () => ministriesService.findDetails(ministryId!),
+    queryFn: () => ministryApi.findDetails(ministryId!),
     enabled: ministryId !== null,
   });
 
   const { data: scales = [] } = useQuery<ScaleResponse[]>({
     queryKey: ["scales", ministryId],
-    queryFn: () => scalesService.listByMinistry(ministryId!),
+    queryFn: () => scaleApi.listByMinistry(ministryId!),
     enabled: ministryId !== null,
   });
 
   const { data: members = [] } = useQuery<MemberResponse[]>({
     queryKey: ["members", ministryId],
-    queryFn: () => membersService.listByMinistry(ministryId!),
+    queryFn: () => membersApi.listByMinistry(ministryId!),
     enabled: ministryId !== null,
   });
 

@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ministriesService } from "../services/ministries.service";
-import type { MinistryRequest } from "../types/ministry";
+import { ministryApi } from "@/features/ministry/api/ministryApi";
+import type { MinistryRequest } from "@/entities/ministry/model/types";
 
 const IconCamera = () => (
   <svg
@@ -230,7 +230,7 @@ export function CreateMinistry() {
         name: name.trim(),
         description: description.trim(),
       };
-      return ministriesService.create(request, avatarImage);
+      return ministryApi.create(request, avatarImage);
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["ministries"] });

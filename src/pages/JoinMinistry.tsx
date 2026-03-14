@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { ministriesService } from "../services/ministries.service";
+import { ministryApi } from "@/features/ministry/api/ministryApi";
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -119,7 +119,7 @@ export function JoinMinistry() {
   const [submitted, setSubmitted] = useState(false);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: () => ministriesService.join(inviteCode.trim()),
+    mutationFn: () => ministryApi.join(inviteCode.trim()),
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ["ministries"] });
       setSubmitted(true);
