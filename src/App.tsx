@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import { Ministries } from "./pages/MinistriesHome/Ministries";
+import { Ministries } from "@/pages/Ministries";
 import { CreateMinistry } from "./pages/CreateMinistry";
-import { MinistryDashboard } from "./pages/MinistryDashboard/MinistryDashboard";
-import { AppLayout } from "./components/AppLayout";
+import { MinistryDashboard } from "./pages/MinistryDashboard";
+import { AppLayout } from "@/shared/ui/AppLayout";
 import { CreateScale } from "./pages/CreateScale";
 import { JoinMinistry } from "./pages/JoinMinistry";
 import { ScaleDetails } from "./pages/ScaleDetails";
