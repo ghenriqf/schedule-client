@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import { Ministries } from "@/pages/Ministries";
-import { CreateMinistry } from "./pages/CreateMinistry";
+import { CreateMinistry } from "@/pages/CreateMinistry/index";
 import { MinistryDashboard } from "./pages/MinistryDashboard";
 import { AppLayout } from "@/shared/ui/AppLayout";
 import { CreateScale } from "./pages/CreateScale";
