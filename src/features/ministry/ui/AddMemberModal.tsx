@@ -118,7 +118,7 @@ export function AddMemberModal({
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 transition-all ${
                       selected
-                        ? "bg-gradient-to-br from-violet-500 to-indigo-500 text-white"
+                        ? "bg-linear-to-br from-violet-500 to-indigo-500 text-white"
                         : "bg-slate-100 text-slate-500"
                     }`}
                   >

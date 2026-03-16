@@ -166,7 +166,7 @@ export function MinistryDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 shrink-0">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-linear-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
                 <IconNote />
               </div>
               <span className="text-sm font-bold text-slate-800 hidden sm:inline tracking-tight">
@@ -186,7 +186,7 @@ export function MinistryDashboard() {
           </div>
 
           {ministry && (
-            <p className="text-sm font-semibold text-slate-700 truncate max-w-[200px] sm:max-w-xs">
+            <p className="text-sm font-semibold text-slate-700 truncate max-w-50 sm:max-w-xs">
               {ministry.name}
             </p>
           )}
@@ -221,7 +221,7 @@ export function MinistryDashboard() {
                     className="w-full aspect-video object-cover"
                   />
                 ) : (
-                  <div className="w-full aspect-video bg-gradient-to-br from-violet-100 via-indigo-50 to-blue-100 flex items-center justify-center text-5xl opacity-30">
+                  <div className="w-full aspect-video bg-linear-to-br from-violet-100 via-indigo-50 to-blue-100 flex items-center justify-center text-5xl opacity-30">
                     🎸
                   </div>
                 )}
@@ -332,7 +332,7 @@ export function MinistryDashboard() {
                 </p>
               </div>
 
-              <div className="p-4 space-y-3 max-h-[420px] overflow-y-auto">
+              <div className="p-4 space-y-3 max-h-105 overflow-y-auto">
                 {members.length === 0 ? (
                   <EmptyState icon="👥" message="Nenhum membro encontrado" />
                 ) : (

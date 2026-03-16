@@ -104,7 +104,7 @@ export function AddMusicModal({
         </div>
 
         {/* List */}
-        <div className="p-3 space-y-1.5 min-h-[320px]">
+        <div className="p-3 space-y-1.5 min-h-80">
           {isLoading ? (
             <div className="space-y-2 animate-pulse p-2">
               {[...Array(5)].map((_, i) => (

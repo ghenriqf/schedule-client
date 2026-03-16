@@ -420,7 +420,7 @@ export function CreateMinistry() {
             <div className="space-y-4">
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                 {/* Banner */}
-                <div className="h-32 bg-gradient-to-br from-violet-100 via-indigo-50 to-blue-100 flex items-center justify-center overflow-hidden">
+                <div className="h-32 bg-linear-to-br from-violet-100 via-indigo-50 to-blue-100 flex items-center justify-center overflow-hidden">
                   {avatarPreviewUrl ? (
                     <img
                       src={avatarPreviewUrl}

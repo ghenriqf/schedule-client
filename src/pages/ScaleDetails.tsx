@@ -123,7 +123,7 @@ interface MemberRowProps {
 function MemberRow({ member, isAdmin, isRemoving, onRemove }: MemberRowProps) {
   return (
     <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group">
-      <div className="w-9 h-9 rounded-full bg-gradient-to-br from-violet-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
+      <div className="w-9 h-9 rounded-full bg-linear-to-br from-violet-400 to-indigo-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
         {initials(member.memberName)}
       </div>
       <div className="min-w-0 flex-1">
@@ -297,7 +297,7 @@ const removeMemberMutation = useMutation({
             {/* Left: logo + back */}
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 shrink-0">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-linear-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
                   <IconNote />
                 </div>
                 <span className="text-sm font-bold text-slate-800 hidden sm:inline tracking-tight">
@@ -312,7 +312,7 @@ const removeMemberMutation = useMutation({
                 className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors"
               >
                 <IconArrowLeft />
-                <span className="hidden sm:inline truncate max-w-[120px]">
+                <span className="hidden sm:inline truncate max-w-30">
                   {ministry?.name ?? "Ministério"}
                 </span>
               </button>
@@ -320,7 +320,7 @@ const removeMemberMutation = useMutation({
 
             {/* Center: scale name */}
             {scale && (
-              <p className="text-sm font-semibold text-slate-700 truncate max-w-[180px] sm:max-w-xs">
+              <p className="text-sm font-semibold text-slate-700 truncate max-w-45 sm:max-w-xs">
                 {scale.name}
               </p>
             )}

@@ -39,7 +39,7 @@ export function MinistryCard({ ministry }: MinistryCardProps) {
   return (
     <div className="group bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-md hover:border-violet-200 transition-all duration-200 overflow-hidden flex flex-col">
       {/* Banner */}
-      <div className="relative h-36 overflow-hidden bg-gradient-to-br from-violet-100 via-indigo-50 to-blue-100 flex-shrink-0">
+      <div className="relative h-36 overflow-hidden bg-linear-to-br from-violet-100 via-indigo-50 to-blue-100 shrink-0">
         {avatarUrl ? (
           <img
             src={avatarUrl}
