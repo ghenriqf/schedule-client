@@ -9,6 +9,11 @@ export const scaleApi = {
     return data
   },
 
+  update: async (ministryId: number, scaleId: number, scale: ScaleRequest): Promise<ScaleResponse> => {
+    const { data } = await client.patch<ScaleResponse>(`${BASE}/${ministryId}/scales/${scaleId}`, scale)
+    return data
+  },
+
   listByMinistry: async (ministryId: number): Promise<ScaleResponse[]> => {
     const { data } = await client.get<ScaleResponse[]>(`${BASE}/${ministryId}/scales`)
     return data
