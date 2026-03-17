@@ -36,7 +36,7 @@ export function MinisterSelector({ members, selected, onSelect }: Props) {
                 : 'border-slate-200 bg-white hover:border-violet-200 hover:bg-violet-50/40'
             }`}
           >
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${isSelected ? 'bg-gradient-to-br from-violet-500 to-indigo-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold shrink-0 ${isSelected ? 'bg-linear-to-br from-violet-500 to-indigo-500 text-white' : 'bg-slate-100 text-slate-500'}`}>
               {initials(name)}
             </div>
             <div className="min-w-0 flex-1">
