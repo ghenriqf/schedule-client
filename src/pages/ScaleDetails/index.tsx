@@ -1,5 +1,6 @@
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useNavigate } from 'react-router-dom'
 import { AddMusicModal } from '@/features/repertoire/ui/AddMusicModal'
 import { AddMemberModal } from '@/features/ministry/ui/AddMemberModal'
 import { useScaleDetails } from './hooks/useScaleDetails'
@@ -18,6 +19,13 @@ const IconNote = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M9 11l3 3L22 4" />
     <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" />
+  </svg>
+)
+
+const IconEdit = () => (
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
   </svg>
 )
 
@@ -57,6 +65,7 @@ function EmptyState({ icon, message }: { icon: string; message: string }) {
 
 export function ScaleDetails() {
   const scale = useScaleDetails()
+  const navigate = useNavigate()
 
   if (scale.isLoading) return <ScaleDetailsSkeleton />
 
@@ -71,7 +80,7 @@ export function ScaleDetails() {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2 shrink-0">
-                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
+                <div className="w-7 h-7 rounded-lg bg-linear-to-br from-violet-500 to-indigo-500 flex items-center justify-center text-white shrink-0">
                   <IconNote />
                 </div>
                 <span className="text-sm font-bold text-slate-800 hidden sm:inline tracking-tight">Schedule</span>
@@ -79,17 +88,22 @@ export function ScaleDetails() {
               <span className="text-slate-200 hidden sm:inline">|</span>
               <button onClick={scale.navigateToMinistry} className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-800 transition-colors">
                 <IconArrowLeft />
-                <span className="hidden sm:inline truncate max-w-[120px]">{scale.ministry?.name ?? 'Ministério'}</span>
+                <span className="hidden sm:inline truncate max-w-30">{scale.ministry?.name ?? 'Ministério'}</span>
               </button>
             </div>
 
             {scale.scale && (
-              <p className="text-sm font-semibold text-slate-700 truncate max-w-[180px] sm:max-w-xs">{scale.scale.name}</p>
+              <p className="text-sm font-semibold text-slate-700 truncate max-w-45 sm:max-w-xs">{scale.scale.name}</p>
             )}
 
             <div className="flex items-center gap-2 shrink-0">
               {scale.isAdmin && !scale.isError && scale.scale && (
                 <>
+                  <button
+                    onClick={() => navigate(`/ministries/${scale.parsedMinistryId}/scales/${scale.parsedScaleId}/edit`)}
+                    className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 text-slate-600 text-xs font-semibold rounded-xl hover:bg-slate-50 transition-colors">
+                    <IconEdit /> Editar
+                  </button>
                   <button onClick={() => scale.setMemberModalOpen(true)}
                     className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 text-slate-600 text-xs font-semibold rounded-xl hover:bg-slate-50 transition-colors">
                     + Membro
@@ -119,7 +133,6 @@ export function ScaleDetails() {
             </div>
           ) : (
             <>
-              {/* Info card */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 sm:p-6">
                 <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-5">
                   <div className="space-y-2 flex-1 min-w-0">
@@ -138,7 +151,6 @@ export function ScaleDetails() {
                 </div>
               </div>
 
-              {/* Members + Music */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
                   <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
