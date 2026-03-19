@@ -1,12 +1,18 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import { ministryApi } from '@/features/ministry'
+import { useApiError } from '@/shared/lib/useApiError'
 
 export function useJoinMinistry() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { handle } = useApiError({
+    messages: {
+      NOT_FOUND: 'Código inválido ou expirado. Verifique e tente novamente.',
+      CONFLICT: 'Você já é membro deste ministério.',
+    },
+  })
 
   const [inviteCode, setInviteCode] = useState('')
   const [submitted, setSubmitted] = useState(false)
@@ -17,9 +23,7 @@ export function useJoinMinistry() {
       await queryClient.invalidateQueries({ queryKey: ['ministries'] })
       setSubmitted(true)
     },
-    onError: () => {
-      toast.error('Código inválido ou expirado. Verifique e tente novamente.')
-    },
+    onError: handle,
   })
 
   return {

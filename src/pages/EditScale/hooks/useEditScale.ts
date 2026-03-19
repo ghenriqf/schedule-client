@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'react-toastify'
 import { scaleApi } from '@/features/scale'
 import { membersApi } from '@/features/ministry'
+import { useApiError } from '@/shared/lib/useApiError'
 import type { ScaleRequest } from '@/entities/scale/model/types'
 
 function formatDateForInput(dateString: string): string {
@@ -25,6 +25,13 @@ export function useEditScale() {
   const { ministryId, scaleId } = useParams<{ ministryId: string; scaleId: string }>()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { handle } = useApiError({
+    messages: {
+      NOT_FOUND: 'Escala não encontrada.',
+      FORBIDDEN: 'Você não tem permissão para editar esta escala.',
+      CONFLICT: 'Já existe uma escala para essa data.',
+    },
+  })
 
   const parsedMinistryId = Number(ministryId)
   const parsedScaleId = Number(scaleId)
@@ -66,9 +73,7 @@ export function useEditScale() {
       await queryClient.invalidateQueries({ queryKey: ['scales', parsedMinistryId] })
       setSubmitted(true)
     },
-    onError: () => {
-      toast.error('Não foi possível atualizar a escala. Tente novamente.')
-    },
+    onError: handle,
   })
 
   function setField<K extends keyof FormState>(key: K, value: FormState[K]) {

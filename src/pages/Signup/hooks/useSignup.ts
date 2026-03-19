@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { Bounce, toast } from 'react-toastify'
+import { toast } from 'react-toastify'
 import { authApi } from '@/features/auth'
+import { useApiError } from '@/shared/lib/useApiError'
 import type { UserRequest } from '@/features/auth'
-import type { AxiosError } from 'axios'
-
-const TOAST_OPTS = {
-  position: 'top-center' as const,
-  autoClose: 5000,
-  theme: 'light' as const,
-  transition: Bounce,
-}
 
 export function useSignup() {
   const navigate = useNavigate()
+  const { handle } = useApiError({
+    messages: {
+      CONFLICT: 'Email ou nome de usuário já cadastrado.',
+      UNPROCESSABLE: 'Verifique os dados informados e tente novamente.',
+      NETWORK_ERROR: 'Servidor indisponível. Verifique sua conexão.',
+    },
+  })
 
   const [username, setUsername] = useState('')
   const [name, setName] = useState('')
@@ -25,17 +25,10 @@ export function useSignup() {
   const { mutate, isPending } = useMutation({
     mutationFn: (credentials: UserRequest) => authApi.signUp(credentials),
     onSuccess: () => {
-      toast.success('Conta criada com sucesso! Faça login para continuar.', TOAST_OPTS)
+      toast.success('Conta criada com sucesso! Faça login para continuar.')
       navigate('/login', { replace: true })
     },
-    onError: (error: AxiosError<Record<string, string>>) => {
-      if (!error.response) {
-        toast.error('Servidor offline', TOAST_OPTS)
-        return
-      }
-      const firstError = Object.values(error.response.data)[0]
-      toast.error(firstError || 'Erro ao criar conta', TOAST_OPTS)
-    },
+    onError: handle,
   })
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {

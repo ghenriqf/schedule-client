@@ -3,11 +3,26 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scaleApi } from '@/features/scale'
 import { ministryApi } from '@/features/ministry'
+import { useApiError } from '@/shared/lib/useApiError'
 
 export function useScaleDetails() {
   const { ministryId, scaleId } = useParams()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+
+  const { handle: handleRemoveMusic } = useApiError({
+    messages: {
+      NOT_FOUND: 'Música não encontrada na escala.',
+      FORBIDDEN: 'Você não tem permissão para remover músicas.',
+    },
+  })
+
+  const { handle: handleRemoveMember } = useApiError({
+    messages: {
+      NOT_FOUND: 'Membro não encontrado na escala.',
+      FORBIDDEN: 'Você não tem permissão para remover membros.',
+    },
+  })
 
   const [musicModalOpen, setMusicModalOpen] = useState(false)
   const [memberModalOpen, setMemberModalOpen] = useState(false)
@@ -30,11 +45,13 @@ export function useScaleDetails() {
   const removeMusicMutation = useMutation({
     mutationFn: (musicId: number) => scaleApi.removeMusic(parsedScaleId, musicId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['scale-details', parsedScaleId] }),
+    onError: handleRemoveMusic,
   })
 
   const removeMemberMutation = useMutation({
     mutationFn: (memberId: number) => scaleApi.removeMember(parsedScaleId, memberId),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['scale-details', parsedScaleId] }),
+    onError: handleRemoveMember,
   })
 
   return {

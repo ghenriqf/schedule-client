@@ -1,13 +1,19 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 import { ministryApi } from '@/features/ministry'
+import { useApiError } from '@/shared/lib/useApiError'
 import type { MinistryRequest } from '@/entities/ministry/model/types'
 
 export function useCreateMinistry() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const { handle } = useApiError({
+    messages: {
+      CONFLICT: 'Já existe um ministério com esse nome.',
+      FORBIDDEN: 'Você não tem permissão para criar ministérios.',
+    },
+  })
 
   const [step, setStep] = useState<0 | 1 | 2>(0)
   const [name, setName] = useState('')
@@ -38,9 +44,7 @@ export function useCreateMinistry() {
       await queryClient.invalidateQueries({ queryKey: ['ministries'] })
       setSubmitted(true)
     },
-    onError: () => {
-      toast.error('Não foi possível criar o ministério. Tente novamente.')
-    },
+    onError: handle,
   })
 
   return {

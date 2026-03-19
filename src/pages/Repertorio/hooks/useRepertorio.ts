@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'react-toastify'
 import { repertoireApi } from '@/features/repertoire'
 import { ministryApi } from '@/features/ministry'
+import { useApiError } from '@/shared/lib/useApiError'
 import type { MusicResponse, MusicRequest } from '@/entities/music/model/types'
 
 export function useRepertorio() {
@@ -12,6 +13,27 @@ export function useRepertorio() {
   const queryClient = useQueryClient()
 
   const ministryId = Number(id)
+
+  const { handle: handleCreate } = useApiError({
+    messages: {
+      CONFLICT: 'Essa música já existe no repertório.',
+      FORBIDDEN: 'Você não tem permissão para adicionar músicas.',
+    },
+  })
+
+  const { handle: handleUpdate } = useApiError({
+    messages: {
+      NOT_FOUND: 'Música não encontrada.',
+      FORBIDDEN: 'Você não tem permissão para editar músicas.',
+    },
+  })
+
+  const { handle: handleDelete } = useApiError({
+    messages: {
+      NOT_FOUND: 'Música não encontrada.',
+      FORBIDDEN: 'Você não tem permissão para remover músicas.',
+    },
+  })
 
   const [search, setSearch] = useState('')
   const [formOpen, setFormOpen] = useState(false)
@@ -45,7 +67,7 @@ export function useRepertorio() {
       toast.success('Música adicionada ao repertório.')
       setFormOpen(false)
     },
-    onError: () => toast.error('Não foi possível adicionar a música.'),
+    onError: handleCreate,
   })
 
   const updateMutation = useMutation({
@@ -56,7 +78,7 @@ export function useRepertorio() {
       setEditTarget(null)
       setFormOpen(false)
     },
-    onError: () => toast.error('Não foi possível atualizar a música.'),
+    onError: handleUpdate,
   })
 
   const deleteMutation = useMutation({
@@ -67,7 +89,7 @@ export function useRepertorio() {
       toast.success('Música removida do repertório.')
       setDeleteTarget(null)
     },
-    onError: () => toast.error('Não foi possível remover a música.'),
+    onError: handleDelete,
   })
 
   return {
