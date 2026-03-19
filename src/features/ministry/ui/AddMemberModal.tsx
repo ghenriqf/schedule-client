@@ -4,7 +4,13 @@ import { Mic, Guitar, Music, Piano, Drum } from "lucide-react";
 import { membersApi } from "@/features/ministry/api/membersApi";
 import { functionsApi } from "@/features/ministry/api/functionsApi";
 import { scaleApi } from "@/features/scale/api/scaleApi";
-import { ModalShell, IconCheck, IconSpinner, initials } from "@/shared/ui/ModalShell";
+import {
+  ModalShell,
+  IconCheck,
+  IconSpinner,
+  initials,
+} from "@/shared/ui/ModalShell";
+import { useApiError } from "@/shared/lib/useApiError";
 
 function getFunctionIcon(name: string) {
   const n = name.toLowerCase();
@@ -29,6 +35,14 @@ export function AddMemberModal({
   onClose,
 }: AddMemberModalProps) {
   const queryClient = useQueryClient();
+  const { handle } = useApiError({
+    messages: {
+      CONFLICT: "Este membro já está escalado para este evento.",
+      NOT_FOUND: "Membro não encontrado no ministério.",
+      FORBIDDEN: "Você não tem permissão para adicionar membros à escala.",
+    },
+  });
+
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
   const [selectedFunctions, setSelectedFunctions] = useState<number[]>([]);
 
@@ -55,6 +69,7 @@ export function AddMemberModal({
       setSelectedFunctions([]);
       onClose();
     },
+    onError: handle,
   });
 
   function toggleFunction(id: number) {
@@ -97,7 +112,6 @@ export function AddMemberModal({
       }
     >
       <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100">
-        {/* Membros */}
         <div className="p-5 space-y-3">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
             Membros disponíveis
@@ -146,7 +160,6 @@ export function AddMemberModal({
           </div>
         </div>
 
-        {/* Funções */}
         <div className="p-5 space-y-3">
           <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
             Funções na escala

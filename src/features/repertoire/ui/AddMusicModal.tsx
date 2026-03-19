@@ -2,7 +2,13 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { repertoireApi } from "@/features/repertoire/api/repertoireApi";
 import { scaleApi } from "@/features/scale/api/scaleApi";
-import { ModalShell, IconCheck, IconSpinner, IconSearch } from "@/shared/ui/ModalShell";
+import {
+  ModalShell,
+  IconCheck,
+  IconSpinner,
+  IconSearch,
+} from "@/shared/ui/ModalShell";
+import { useApiError } from "@/shared/lib/useApiError";
 import type { MusicResponse } from "@/entities/music/model/types";
 
 interface AddMusicModalProps {
@@ -19,6 +25,14 @@ export function AddMusicModal({
   onClose,
 }: AddMusicModalProps) {
   const queryClient = useQueryClient();
+  const { handle } = useApiError({
+    messages: {
+      CONFLICT: "Esta música já foi adicionada à escala.",
+      NOT_FOUND: "Música não encontrada no repertório.",
+      FORBIDDEN: "Você não tem permissão para adicionar músicas à escala.",
+    },
+  });
+
   const [search, setSearch] = useState("");
   const [selectedMusic, setSelectedMusic] = useState<number | null>(null);
 
@@ -43,13 +57,14 @@ export function AddMusicModal({
   const { mutate, isPending } = useMutation({
     mutationFn: () =>
       selectedMusic
-        ? scaleApi.addMusic(scaleId, selectedMusic!)
+        ? scaleApi.addMusic(scaleId, selectedMusic)
         : Promise.reject(new Error("Selecione uma música")),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["scale-details", scaleId] });
       setSelectedMusic(null);
       onClose();
     },
+    onError: handle,
   });
 
   if (!open) return null;
@@ -86,7 +101,6 @@ export function AddMusicModal({
       }
     >
       <div className="flex flex-col">
-        {/* Search */}
         <div className="px-5 py-3 border-b border-slate-100">
           <div className="relative">
             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">
@@ -103,7 +117,6 @@ export function AddMusicModal({
           </div>
         </div>
 
-        {/* List */}
         <div className="p-3 space-y-1.5 min-h-80">
           {isLoading ? (
             <div className="space-y-2 animate-pulse p-2">
