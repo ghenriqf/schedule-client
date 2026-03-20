@@ -9,8 +9,7 @@ import { CreateScale } from "./pages/CreateScale";
 import { JoinMinistry } from "./pages/JoinMinistry";
 import { ScaleDetails } from "./pages/ScaleDetails";
 import { Repertorio } from "./pages/Repertorio";
-import { EditScale } from '@/pages/EditScale'
-
+import { EditScale } from "@/pages/EditScale";
 
 function App() {
   return (
@@ -32,17 +31,14 @@ function App() {
             element={<ScaleDetails />}
           />
           <Route path="/ministries/join" element={<JoinMinistry />} />
-          <Route
-            path="/profile"
-            element={
-              <div className="p-8 text-slate-500">Perfil (em breve)</div>
-            }
-          />
         </Route>
         <Route path="/ministries/:id/repertorio" element={<Repertorio />} />
 
         <Route path="/" element={<Navigate to="/ministries" replace />} />
-        <Route path="/ministries/:ministryId/scales/:scaleId/edit" element={<EditScale />} />
+        <Route
+          path="/ministries/:ministryId/scales/:scaleId/edit"
+          element={<EditScale />}
+        />
       </Routes>
     </BrowserRouter>
   );
