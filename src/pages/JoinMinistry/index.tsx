@@ -145,7 +145,7 @@ export function JoinMinistry() {
                     placeholder="Ex: e722efaa-3691-4ec7-84a8-f4..."
                     value={ctx.inviteCode}
                     onChange={(e) =>
-                      ctx.setInviteCode(e.target.value.toUpperCase())
+                      ctx.setInviteCode(e.target.value)
                     }
                     autoFocus
                     className="w-full px-3.5 py-3 rounded-xl border border-slate-200 bg-slate-50 text-sm font-mono text-slate-900 placeholder:text-slate-400 placeholder:font-sans tracking-wider focus:outline-none focus:ring-2 focus:ring-violet-400 focus:border-violet-400 focus:bg-white transition"
